@@ -17,13 +17,13 @@ namespace Neo4j.Migration.Journal
 
         public async Task AddAsync(JournalRecord record, IAsyncTransaction transaction)
         {
-            const string query = @"";
-
+            const string query = @"CREATE (j:MigrationJournal { Version: $Version, ScriptName: $ScriptName, AppliedAt: $AppliedAt})";
             var addFunc = new Func<IAsyncTransaction, Task>(async (tx) =>
             {
                 await tx.RunAsync(query, record);
                 await tx.CommitAsync();
             });
+
             if (transaction is null)
             {
                 await AddInSessionAsync(addFunc);
