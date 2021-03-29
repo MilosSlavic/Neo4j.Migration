@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using Neo4j.Driver;
+using System.Threading.Tasks;
 
 namespace Neo4j.Migration.Journal
 {
     public interface IJournalRepository
     {
-        Task<JournalRecord> GetLastScriptAsync();
+        Task<JournalRecord> GetLastScriptAsync(IAsyncTransaction transaction);
 
-        Task AddAsync(JournalRecord record);
+        Task AddAsync(JournalRecord record, IAsyncTransaction);
     }
 }
