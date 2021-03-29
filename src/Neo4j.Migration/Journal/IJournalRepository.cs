@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Neo4j.Migration
+namespace Neo4j.Migration.Journal
 {
     public interface IJournalRepository
     {

@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neo4j.Migration
+namespace Neo4j.Migration.Journal
 {
     public class JournalRepository : IJournalRepository
     {
