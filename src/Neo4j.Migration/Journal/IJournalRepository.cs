@@ -7,6 +7,6 @@ namespace Neo4j.Migration.Journal
     {
         Task<JournalRecord> GetLastScriptAsync(IAsyncTransaction transaction);
 
-        Task AddAsync(JournalRecord record, IAsyncTransaction);
+        Task AddAsync(JournalRecord record, IAsyncTransaction transaction);
     }
 }
