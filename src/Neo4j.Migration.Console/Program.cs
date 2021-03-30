@@ -1,4 +1,6 @@
-﻿namespace Neo4j.Migration.Console
+﻿using System.Reflection;
+
+namespace Neo4j.Migration.Console
 {
     class Program
     {
@@ -7,7 +9,7 @@
             System.Console.WriteLine("Hello World!");
             Neo4jMigrator
                 .Configuration
-                .LoadEmbeddedScripts()
+                .LoadEmbeddedScripts(Assembly.GetExecutingAssembly())
                 .SetupDriver("neo4j url", "neo4j", "P@ssw0rd")
                 .ExecuteAsync().GetAwaiter().GetResult();
         }
