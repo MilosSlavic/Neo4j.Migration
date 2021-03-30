@@ -10,7 +10,7 @@ namespace Neo4j.Migration.Console
             Neo4jMigrator
                 .Configuration
                 .LoadEmbeddedScripts(Assembly.GetExecutingAssembly())
-                .SetupDriver("neo4j url", "neo4j", "P@ssw0rd")
+                .SetupDriver("bolt://neo4j", "neo4j", "P@ssw0rd")
                 .ExecuteAsync().GetAwaiter().GetResult();
         }
     }
