@@ -7,8 +7,6 @@ namespace Neo4j.Migration
     {
         internal List<IScriptLoader> ScriptLoaders { get; set; } = new List<IScriptLoader>();
 
-        internal string ConnectionString { get; set; }
-
         internal IDriver Driver { get; set; }
     }
 }

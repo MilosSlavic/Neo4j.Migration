@@ -15,7 +15,7 @@ namespace Neo4j.Migration.Journal
             _driver = driver;
         }
 
-        public async Task AddAsync(JournalRecord record, IAsyncTransaction transaction)
+        public async Task AddAsync(JournalRecord record, IAsyncTransaction transaction = null)
         {
             const string query = @"CREATE (j:MigrationJournal { Version: $Version, ScriptName: $ScriptName, AppliedAt: $AppliedAt})";
             var addFunc = new Func<IAsyncTransaction, Task>(async (tx) =>
@@ -51,7 +51,7 @@ namespace Neo4j.Migration.Journal
             }
         }
 
-        public async Task<JournalRecord> GetLastScriptAsync(IAsyncTransaction transaction)
+        public async Task<JournalRecord> GetLastScriptAsync(IAsyncTransaction transaction = null)
         {
             const string query = @"
                 MATCH (j:MigrationJournal)
