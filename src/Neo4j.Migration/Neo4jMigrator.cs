@@ -1,4 +1,6 @@
-﻿namespace Neo4j.Migration
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Neo4j.Migration.UnitTests")]
+
+namespace Neo4j.Migration
 {
     public static class Neo4jMigrator
     {

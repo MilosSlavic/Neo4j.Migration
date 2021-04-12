@@ -50,8 +50,8 @@ namespace Neo4j.Migration
             return result;
         }
 
-        public int ResolveVersion(string scriptName) => Convert.ToInt32(scriptName.Split('_')[0]);
+        internal int ResolveVersion(string scriptName) => Convert.ToInt32(scriptName.Split('_')[0]);
 
-        public IEnumerable<string> ParseStatements(string content) => content.Split(_options.Delimiter).Select(x => x.Trim());
+        internal IEnumerable<string> ParseStatements(string content) => content.Split(_options.Delimiter).Select(x => x.Trim());
     }
 }

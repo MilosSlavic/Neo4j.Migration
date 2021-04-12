@@ -31,14 +31,33 @@ namespace Neo4j.Migration
 
         public MigrationConfigurationBuilder SetupDriver(string url, string username, string password)
         {
-            // TODO: Add validation
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentNullException(nameof(username));
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+
             _configuration.Driver = GraphDatabase.Driver(url, AuthTokens.Basic(username, password));
             return this;
         }
 
         public MigrationConfigurationBuilder SetupDriver(string url, string base64KerberosToken)
         {
-            // TODO: Add validation
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+            if (string.IsNullOrEmpty(base64KerberosToken))
+            {
+                throw new ArgumentNullException(nameof(base64KerberosToken));
+            }
             _configuration.Driver = GraphDatabase.Driver(url, AuthTokens.Kerberos(base64KerberosToken));
             return this;
         }

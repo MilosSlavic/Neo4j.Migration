@@ -28,7 +28,7 @@ namespace Neo4j.Migration
             await ExecuteSequentialyAsync(configuration, scripts);
         }
 
-        private async IAsyncEnumerable<IEnumerable<Script>> GetScriptsAsync(ICollection<IScriptLoader> scriptLoaders, int lastVersion)
+        internal async IAsyncEnumerable<IEnumerable<Script>> GetScriptsAsync(ICollection<IScriptLoader> scriptLoaders, int lastVersion)
         {
             foreach (var scriptLoader in scriptLoaders)
             {
@@ -36,7 +36,7 @@ namespace Neo4j.Migration
             }
         }
 
-        private async Task ExecuteSequentialyAsync(MigrationConfiguration configuration, ICollection<Script> scripts)
+        internal async Task ExecuteSequentialyAsync(MigrationConfiguration configuration, ICollection<Script> scripts)
         {
             var orderedScripts = scripts.OrderBy(x => x.Version).ToList();
             foreach (var script in orderedScripts)
