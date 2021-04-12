@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace Neo4j.Migration.Journal
 {
-    public class JournalRepository : IJournalRepository
+    public class JournalRepository : IJournalRepository, IDisposable
     {
-        private readonly IDriver _driver;
+        private  IDriver _driver;
+        private bool _disposedValue;
 
         public JournalRepository(
             IDriver driver)
@@ -99,6 +100,26 @@ namespace Neo4j.Migration.Journal
             {
                 await session.CloseAsync();
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _driver = null;
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

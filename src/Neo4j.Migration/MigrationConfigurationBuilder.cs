@@ -1,6 +1,5 @@
 ﻿using Neo4j.Driver;
 using System;
-using System.Threading.Tasks;
 
 namespace Neo4j.Migration
 {

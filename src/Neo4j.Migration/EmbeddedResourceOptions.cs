@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Neo4j.Migration
+﻿namespace Neo4j.Migration
 {
     public class EmbeddedResourceOptions
     {

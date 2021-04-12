@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4j.Migration.Console", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{371C6C66-BE4E-40C9-91C1-F81BCDED4DAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo4j.Migration.UnitTests", "test\Neo4j.Migration.UnitTests\Neo4j.Migration.UnitTests.csproj", "{4DE5CCA0-A36A-4120-B27C-23BC90A43E9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4j.Migration.UnitTests", "test\Neo4j.Migration.UnitTests\Neo4j.Migration.UnitTests.csproj", "{4DE5CCA0-A36A-4120-B27C-23BC90A43E9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo4j.Migration.IntegrationTests", "test\Neo4j.Migration.IntegrationTests\Neo4j.Migration.IntegrationTests.csproj", "{292C8708-5F05-4733-98DA-D7753060CB70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4j.Migration.IntegrationTests", "test\Neo4j.Migration.IntegrationTests\Neo4j.Migration.IntegrationTests.csproj", "{292C8708-5F05-4733-98DA-D7753060CB70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo4j.Migration.AspNetCore", "src\Neo4j.Migration.AspNetCore\Neo4j.Migration.AspNetCore.csproj", "{B5D83C83-50D7-434B-BE52-FD5FA9D5CBF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{292C8708-5F05-4733-98DA-D7753060CB70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{292C8708-5F05-4733-98DA-D7753060CB70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{292C8708-5F05-4733-98DA-D7753060CB70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D83C83-50D7-434B-BE52-FD5FA9D5CBF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5D83C83-50D7-434B-BE52-FD5FA9D5CBF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5D83C83-50D7-434B-BE52-FD5FA9D5CBF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5D83C83-50D7-434B-BE52-FD5FA9D5CBF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{4CDF19E5-182D-46BF-B22B-72D58F2FD910} = {C6453D1E-B8CE-4E38-9B3E-B7C8772E0FA5}
 		{4DE5CCA0-A36A-4120-B27C-23BC90A43E9B} = {371C6C66-BE4E-40C9-91C1-F81BCDED4DAC}
 		{292C8708-5F05-4733-98DA-D7753060CB70} = {371C6C66-BE4E-40C9-91C1-F81BCDED4DAC}
+		{B5D83C83-50D7-434B-BE52-FD5FA9D5CBF9} = {C6453D1E-B8CE-4E38-9B3E-B7C8772E0FA5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DDB6EE0C-3C1D-42F4-AD1F-72A426848F07}

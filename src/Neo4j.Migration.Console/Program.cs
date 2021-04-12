@@ -11,7 +11,10 @@ namespace Neo4j.Migration.Console
                 .Configuration
                 .LoadEmbeddedScripts(Assembly.GetExecutingAssembly())
                 .SetupDriver("bolt://neo4j", "neo4j", "P@ssw0rd")
-                .ExecuteAsync().GetAwaiter().GetResult();
+                .Build()
+                .MigrateAsync()
+                .GetAwaiter()
+                .GetResult();
         }
     }
 }
