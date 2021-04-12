@@ -62,15 +62,9 @@ namespace Neo4j.Migration
             return this;
         }
 
-        internal MigrationConfiguration Build()
+        public MigrationConfiguration Build()
         {
             return _configuration;
-        }
-
-        public Task ExecuteAsync()
-        {
-            var config = this.Build();
-            throw new NotImplementedException();
         }
     }
 }

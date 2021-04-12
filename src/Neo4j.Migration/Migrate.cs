@@ -18,9 +18,15 @@ namespace Neo4j.Migration
 
         public async Task ExecuteAsync(MigrationConfiguration configuration)
         {
-            var lastVersion = await _journalRepository.GetLastScriptAsync();
+            int lastVersion = 0;
+            var lastJournalRecord = await _journalRepository.GetLastScriptAsync();
+            if (lastJournalRecord is not null)
+            {
+                lastVersion = lastJournalRecord.Version;
+            }
+
             var scripts = new List<Script>();
-            await foreach (var scriptLoaderResult in GetScriptsAsync(configuration.ScriptLoaders, lastVersion.Version))
+            await foreach (var scriptLoaderResult in GetScriptsAsync(configuration.ScriptLoaders, lastVersion))
             {
                 scripts.AddRange(scriptLoaderResult);
             }
