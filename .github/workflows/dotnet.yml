@@ -33,6 +33,6 @@ jobs:
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
         PROJECT_FILE_PATH: src/Neo4j.Migration/Neo4j.Migration.csproj
-        NUGET_KEY: ${{ secret.NUGETAPIKEY }}
+        NUGET_KEY: ${{ secrets.NUGETAPIKEY }}
         INCLUDE_SYMBOLS: true
         
