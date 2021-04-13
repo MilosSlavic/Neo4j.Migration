@@ -61,25 +61,33 @@ namespace Neo4j.Migration
                 {
                     await session.WriteTransactionAsync(async tx =>
                     {
-                        foreach (var statement in script.Statements)
+                        try
                         {
-                            if (string.IsNullOrEmpty(statement))
+                            foreach (var statement in script.Statements)
                             {
-                                continue;
+                                if (string.IsNullOrEmpty(statement))
+                                {
+                                    continue;
+                                }
+
+                                _logger.LogDebug($"Executing statement: \n{statement}\n");
+                                await tx.RunAsync(statement);
                             }
 
-                            _logger.LogDebug($"Executing statement: \n{statement}\n");
-                            await tx.RunAsync(statement);
+                            var journalRecord = new JournalRecord
+                            {
+                                Version = script.Version,
+                                ScriptName = script.Name,
+                                AppliedAt = DateTime.Now
+                            };
+                            await _journalRepository.AddAsync(journalRecord);
+                            await tx.CommitAsync();
                         }
-
-                        var journalRecord = new JournalRecord
+                        catch
                         {
-                            Version = script.Version,
-                            ScriptName = script.Name,
-                            AppliedAt = DateTime.Now
-                        };
-                        await _journalRepository.AddAsync(journalRecord);
-                        await tx.CommitAsync();
+                            await tx.RollbackAsync();
+                            throw;
+                        }
                     });
                 }
                 catch (Exception ex)
