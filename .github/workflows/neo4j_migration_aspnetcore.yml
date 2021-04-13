@@ -1,0 +1,36 @@
+name: Neo4j.Migration.AspNetCore
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: release
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Setup neo4j
+      uses: Baptouuuu/Setup-Neo4j@v1.1.0
+      with:
+        password: test
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+      env:
+        NEO4J_CONNECTION: bolt://localhost:7687/
+        NEO4J_USERNAME: neo4j
+        NEO4J_PASSWORD: test
+    - name: Publish nuget
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+        PROJECT_FILE_PATH: src/Neo4j.Migration.AspNetCore/Neo4j.Migration.AspNetCore.csproj
+        NUGET_KEY: ${{ secrets.NUGETAPIKEY }}
+        INCLUDE_SYMBOLS: true
+        
