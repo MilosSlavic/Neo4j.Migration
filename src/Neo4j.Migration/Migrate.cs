@@ -63,6 +63,11 @@ namespace Neo4j.Migration
                     {
                         foreach (var statement in script.Statements)
                         {
+                            if (string.IsNullOrEmpty(statement))
+                            {
+                                continue;
+                            }
+
                             _logger.LogDebug($"Executing statement: \n{statement}\n");
                             await tx.RunAsync(statement);
                         }
