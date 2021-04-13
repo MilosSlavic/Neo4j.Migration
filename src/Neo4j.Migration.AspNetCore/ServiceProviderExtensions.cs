@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Neo4j.Migration;
 using Neo4j.Migration.Journal;
 using System;
@@ -9,7 +10,7 @@ namespace Neo4jMigration.AspNetCore
     {
         public static IServiceCollection AddNeo4jMigrations(this IServiceCollection services, Func<MigrationConfigurationBuilder> builder)
         {
-            if(builder is null)
+            if (builder is null)
             {
                 throw new Exception("You must provide the configuration.");
             }
@@ -22,7 +23,8 @@ namespace Neo4jMigration.AspNetCore
                 {
                     using var scope = ctx.CreateScope();
                     var configuration = scope.ServiceProvider.GetRequiredService<MigrationConfiguration>();
-                    return new JournalRepository(configuration.Driver);
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<JournalRepository>>();
+                    return new JournalRepository(logger, configuration.Driver);
                 });
         }
 
