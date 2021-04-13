@@ -1,4 +1,5 @@
-﻿using Neo4j.Migration.Journal;
+﻿using Microsoft.Extensions.Logging;
+using Neo4j.Migration.Journal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +9,20 @@ namespace Neo4j.Migration
 {
     internal sealed class Migrate : IMigrate
     {
+        private readonly ILogger<Migrate> _logger;
         private readonly IJournalRepository _journalRepository;
 
         public Migrate(
+            ILogger<Migrate> logger,
             IJournalRepository journalRepository)
         {
+            _logger = logger;
             _journalRepository = journalRepository;
         }
 
         public async Task ExecuteAsync(MigrationConfiguration configuration)
         {
+            _logger.LogInformation("Started appling migrations");
             int lastVersion = 0;
             var lastJournalRecord = await _journalRepository.GetLastScriptAsync();
             if (lastJournalRecord is not null)
@@ -25,12 +30,15 @@ namespace Neo4j.Migration
                 lastVersion = lastJournalRecord.Version;
             }
 
+            _logger.LogInformation($"Resolved the last version: '{lastVersion}'");
             var scripts = new List<Script>();
             await foreach (var scriptLoaderResult in GetScriptsAsync(configuration.ScriptLoaders, lastVersion))
             {
                 scripts.AddRange(scriptLoaderResult);
             }
 
+            _logger.LogInformation($"Found {scripts.Count} scripts");
+            _logger.LogInformation("Executing sequentially. . .");
             await ExecuteSequentialyAsync(configuration, scripts);
         }
 
@@ -47,6 +55,7 @@ namespace Neo4j.Migration
             var orderedScripts = scripts.OrderBy(x => x.Version).ToList();
             foreach (var script in orderedScripts)
             {
+                _logger.LogDebug($"Script info - Name'{script.Name}' Version '{script.Version}'");
                 var session = configuration.Driver.AsyncSession();
                 try
                 {
@@ -54,6 +63,7 @@ namespace Neo4j.Migration
                     {
                         foreach (var statement in script.Statements)
                         {
+                            _logger.LogDebug($"Executing statement: \n{statement}\n");
                             await tx.RunAsync(statement);
                         }
 
@@ -67,9 +77,9 @@ namespace Neo4j.Migration
                         await tx.CommitAsync();
                     });
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // TODO: Logging
+                    _logger.LogError(ex, ex.Message);
                     break;
                 }
                 finally

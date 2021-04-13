@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Neo4j.Migration
 {
@@ -6,8 +7,9 @@ namespace Neo4j.Migration
     {
         public static async Task MigrateAsync(this MigrationConfiguration migrationConfiguration)
         {
-            var journalRepository = new Journal.JournalRepository(migrationConfiguration.Driver);
-            var migrate = new Migrate(journalRepository);
+            var loggerFactory = new LoggerFactory();
+            var journalRepository = new Journal.JournalRepository(loggerFactory.CreateLogger<Journal.JournalRepository>(), migrationConfiguration.Driver);
+            var migrate = new Migrate(loggerFactory.CreateLogger<Migrate>(), journalRepository);
             await migrate.ExecuteAsync(migrationConfiguration);
         }
     }

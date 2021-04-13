@@ -1,4 +1,5 @@
-﻿using Neo4j.Driver;
+﻿using Microsoft.Extensions.Logging;
+using Neo4j.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,17 +8,21 @@ namespace Neo4j.Migration.Journal
 {
     public class JournalRepository : IJournalRepository, IDisposable
     {
-        private  IDriver _driver;
+        private readonly ILogger<JournalRepository> _logger;
+        private IDriver _driver;
         private bool _disposedValue;
 
         public JournalRepository(
+            ILogger<JournalRepository> logger,
             IDriver driver)
         {
+            _logger = logger;
             _driver = driver;
         }
 
         public async Task AddAsync(JournalRecord record, IAsyncTransaction transaction = null)
         {
+            _logger.LogDebug($"Writing new journal record. Version: '{record.Version}' Name: '{record.ScriptName}'.");
             const string query = @"CREATE (j:MigrationJournal { Version: $Version, ScriptName: $ScriptName, AppliedAt: $AppliedAt})";
             var addFunc = new Func<IAsyncTransaction, Task>(async (tx) =>
             {
@@ -41,9 +46,9 @@ namespace Neo4j.Migration.Journal
             {
                 await session.WriteTransactionAsync(func);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Logging
+                _logger.LogError(ex, ex.Message);
                 throw;
             }
             finally
@@ -54,6 +59,7 @@ namespace Neo4j.Migration.Journal
 
         public async Task<JournalRecord> GetLastScriptAsync(IAsyncTransaction transaction = null)
         {
+            _logger.LogInformation("Fetching the last applied script information.");
             const string query = @"
                 MATCH (j:MigrationJournal)
                 ORDER BY j.Version DESC
@@ -91,9 +97,9 @@ namespace Neo4j.Migration.Journal
             {
                 return await session.ReadTransactionAsync(func);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Logging
+                _logger.LogError(ex, ex.Message);
                 throw;
             }
             finally
