@@ -1,16 +1,15 @@
-name: .NET
+name: Neo4j.Migration
 
 on:
-  push:
-    branches: [ release ]
-  pull_request:
-    branches: [ release ]
+  push: workflow_dispatch
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: release
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
