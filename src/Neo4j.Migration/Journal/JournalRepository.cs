@@ -62,6 +62,7 @@ namespace Neo4j.Migration.Journal
             _logger.LogInformation("Fetching the last applied script information.");
             const string query = @"
                 MATCH (j:MigrationJournal)
+                RETURN j.Version as Version, j.ScriptName as ScriptName, j.AppliedAt as AppliedAt
                 ORDER BY j.Version DESC
                 LIMIT 1";
             var getLastScriptFunc = new Func<IAsyncTransaction, Task<JournalRecord>>(async tx =>
@@ -73,7 +74,6 @@ namespace Neo4j.Migration.Journal
                 {
                     return null;
                 }
-
                 return new JournalRecord
                 {
                     Version = record["Version"].As<int>(),

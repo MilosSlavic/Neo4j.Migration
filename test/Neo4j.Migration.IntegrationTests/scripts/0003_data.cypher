@@ -1,0 +1,1 @@
+﻿CREATE (e:Employee { FirstName: "FirstName", LastName: "LastName" })

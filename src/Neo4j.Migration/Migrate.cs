@@ -71,7 +71,7 @@ namespace Neo4j.Migration
                         {
                             Version = script.Version,
                             ScriptName = script.Name,
-                            AppliedAt = DateTime.UtcNow
+                            AppliedAt = DateTime.Now
                         };
                         await _journalRepository.AddAsync(journalRecord);
                         await tx.CommitAsync();

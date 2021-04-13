@@ -30,7 +30,8 @@ namespace Neo4j.Migration
             var scriptNames = _assembly
                 .GetManifestResourceNames()
                 .Where(x => x.EndsWith(_options.FileExtension))
-                .Where(x => ResolveVersion(x) > lastVersion);
+                .Where(x => ResolveVersion(GetScriptName(x)) > lastVersion)
+                .ToList();
 
             var result = new List<Script>(scriptNames.Count());
             foreach (var scriptName in scriptNames)
@@ -41,7 +42,7 @@ namespace Neo4j.Migration
                 var script = new Script
                 {
                     Name = scriptName,
-                    Version = ResolveVersion(scriptName),
+                    Version = ResolveVersion(GetScriptName(scriptName)),
                     Statements = ParseStatements(content)
                 };
                 result.Add(script);
@@ -51,6 +52,8 @@ namespace Neo4j.Migration
         }
 
         internal int ResolveVersion(string scriptName) => Convert.ToInt32(scriptName.Split('_')[0]);
+
+        internal string GetScriptName(string scriptName) => scriptName.Substring(scriptName.LastIndexOf(".", scriptName.IndexOf($".{_options.FileExtension}") - 1) + 1);
 
         internal IEnumerable<string> ParseStatements(string content) => content.Split(_options.Delimiter).Select(x => x.Trim());
     }

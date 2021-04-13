@@ -1,1 +1,1 @@
-﻿docker run neo4j -p7687:7687 --env=NEO4J_AUTH=neo4j/test
+docker run -p 7687:7687 --env=NEO4J_AUTH=neo4j/test neo4j
