@@ -17,16 +17,16 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Setup neo4j
-      uses: Baptouuuu/Setup-Neo4j@v1.1.0
-      with:
-        password: test
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-      env:
-        NEO4J_CONNECTION: bolt://localhost:7687/
-        NEO4J_USERNAME: neo4j
-        NEO4J_PASSWORD: test
+    #- name: Setup neo4j
+      #uses: Baptouuuu/Setup-Neo4j@v1.1.0
+      #with:
+        #password: test
+    #- name: Test
+      #run: dotnet test --no-build --verbosity normal
+     # env:
+      #  NEO4J_CONNECTION: bolt://localhost:7687/
+       # NEO4J_USERNAME: neo4j
+       # NEO4J_PASSWORD: test
     - name: Publish nuget
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
