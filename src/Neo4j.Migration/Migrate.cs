@@ -80,7 +80,7 @@ namespace Neo4j.Migration
                                 ScriptName = script.Name,
                                 AppliedAt = DateTime.Now
                             };
-                            await _journalRepository.AddAsync(journalRecord);
+                            await _journalRepository.AddAsync(journalRecord, transaction: tx);
                             await tx.CommitAsync();
                         }
                         catch
