@@ -20,23 +20,16 @@ namespace Neo4j.Migration.Journal
             _driver = driver;
         }
 
-        public async Task AddAsync(JournalRecord record, IAsyncTransaction transaction = null)
+        public async Task AddAsync(JournalRecord record)
         {
             _logger.LogDebug($"Writing new journal record. Version: '{record.Version}' Name: '{record.ScriptName}'.");
             const string query = @"CREATE (j:MigrationJournal { Version: $Version, ScriptName: $ScriptName, AppliedAt: $AppliedAt})";
-            var addFunc = new Func<IAsyncTransaction, Task>(async (tx) =>
+
+            await AddInSessionAsync(async (tx) =>
             {
                 await tx.RunAsync(query, record);
                 await tx.CommitAsync();
             });
-
-            if (transaction is null)
-            {
-                await AddInSessionAsync(addFunc);
-                return;
-            }
-
-            await addFunc(transaction);
         }
 
         private async Task AddInSessionAsync(Func<IAsyncTransaction, Task> func)
@@ -57,7 +50,7 @@ namespace Neo4j.Migration.Journal
             }
         }
 
-        public async Task<JournalRecord> GetLastScriptAsync(IAsyncTransaction transaction = null)
+        public async Task<JournalRecord> GetLastScriptAsync()
         {
             _logger.LogInformation("Fetching the last applied script information.");
             const string query = @"
@@ -65,7 +58,8 @@ namespace Neo4j.Migration.Journal
                 RETURN j.Version as Version, j.ScriptName as ScriptName, j.AppliedAt as AppliedAt
                 ORDER BY j.Version DESC
                 LIMIT 1";
-            var getLastScriptFunc = new Func<IAsyncTransaction, Task<JournalRecord>>(async tx =>
+
+            return await GetLastScriptInSessionAsync(async tx =>
             {
                 var cursor = await tx.RunAsync(query);
                 var records = await cursor.ToListAsync();
@@ -74,6 +68,7 @@ namespace Neo4j.Migration.Journal
                 {
                     return null;
                 }
+
                 return new JournalRecord
                 {
                     Version = record["Version"].As<int>(),
@@ -81,13 +76,6 @@ namespace Neo4j.Migration.Journal
                     AppliedAt = record["AppliedAt"].As<DateTime>()
                 };
             });
-
-            if (transaction is null)
-            {
-                return await GetLastScriptInSessionAsync(getLastScriptFunc);
-            }
-
-            return await getLastScriptFunc(transaction);
         }
 
         private async Task<JournalRecord> GetLastScriptInSessionAsync(Func<IAsyncTransaction, Task<JournalRecord>> func)
