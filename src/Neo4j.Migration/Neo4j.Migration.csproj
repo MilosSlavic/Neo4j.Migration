@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<Version>1.0.8</Version>
+		<Version>1.0.9</Version>
 		<Authors>Miloš Slavić</Authors>
 		<PackageTags>neo4j,database,migration,graph</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
