@@ -40,6 +40,7 @@ namespace Neo4j.Migration
             _logger.LogInformation($"Found {scripts.Count} scripts");
             _logger.LogInformation("Executing sequentially. . .");
             await ExecuteSequentialyAsync(configuration, scripts);
+            _logger.LogInformation("Executed successfully!");
         }
 
         internal async IAsyncEnumerable<IEnumerable<Script>> GetScriptsAsync(ICollection<IScriptLoader> scriptLoaders, int lastVersion)
@@ -55,39 +56,29 @@ namespace Neo4j.Migration
             var orderedScripts = scripts.OrderBy(x => x.Version).ToList();
             foreach (var script in orderedScripts)
             {
-                _logger.LogDebug($"Script info - Name'{script.Name}' Version '{script.Version}'");
+                _logger.LogInformation($"Script info - Name'{script.Name}' Version '{script.Version}'");
                 var session = configuration.Driver.AsyncSession();
                 try
                 {
                     await session.WriteTransactionAsync(async tx =>
                     {
-                        try
+                        foreach (var statement in script.Statements)
                         {
-                            foreach (var statement in script.Statements)
+                            if (string.IsNullOrEmpty(statement))
                             {
-                                if (string.IsNullOrEmpty(statement))
-                                {
-                                    continue;
-                                }
-
-                                _logger.LogDebug($"Executing statement: \n{statement}\n");
-                                await tx.RunAsync(statement);
+                                continue;
                             }
 
-                            var journalRecord = new JournalRecord
-                            {
-                                Version = script.Version,
-                                ScriptName = script.Name,
-                                AppliedAt = DateTime.Now
-                            };
-                            await _journalRepository.AddAsync(journalRecord, transaction: tx);
-                            await tx.CommitAsync();
+                            _logger.LogDebug($"Executing statement: \n{statement}\n");
+                            await tx.RunAsync(statement);
                         }
-                        catch
-                        {
-                            await tx.RollbackAsync();
-                            throw;
-                        }
+                    });
+
+                    await _journalRepository.AddAsync(new JournalRecord
+                    {
+                        Version = script.Version,
+                        ScriptName = script.Name,
+                        AppliedAt = DateTime.Now
                     });
                 }
                 catch (Exception ex)
